@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
     return FutureBuilder(
       //Lo que vamos a consultar que puede tardar
       future: menuProvider.loadData(),
-      //Datos iniciales 
+      //Datos iniciales la ponemos vacía para que no de problemas 
       initialData: [],
       builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
         return ListView(
