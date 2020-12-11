@@ -12,6 +12,9 @@ class _InputsPageState extends State<InputsPage> {
   String _userName = '';
   String _email = '';
   String _fecha = '';
+  String _optionSelected = 'Volar';
+
+  List<String> _poderes = ['Volar', 'Rayos X', 'Super Fuerza', 'Super Velocidad'];
 
   TextEditingController _inputFieldDateController = new TextEditingController();
 
@@ -31,6 +34,8 @@ class _InputsPageState extends State<InputsPage> {
           _createPasswordField(),
           Divider(),
           _createDateInput(context),
+          Divider(),
+          _createDropdown(),
           Divider(),
           _showValues(),
         ],
@@ -60,13 +65,6 @@ class _InputsPageState extends State<InputsPage> {
         });
        
       }
-    );
-  }
-
-  Widget _showValues() {
-    return ListTile(
-      title: Text('El nombre es $_userName'),
-      subtitle: Text('El email es $_email'),
     );
   }
 
@@ -136,12 +134,14 @@ class _InputsPageState extends State<InputsPage> {
     );
   }
 
+  //DatePicker
   _selectDate(BuildContext context) async {
     DateTime picked = await showDatePicker(
       context: context,
       initialDate: new DateTime.now(),
       firstDate: new DateTime(2018),
       lastDate: new DateTime(2025),
+      locale: Locale('es','ES'),
     );
     if(picked != null){
       setState((){
@@ -149,5 +149,44 @@ class _InputsPageState extends State<InputsPage> {
         _inputFieldDateController.text = _fecha;
       });
     }
+  }
+
+  
+  //Creación de un dropdown menú
+  Widget _createDropdown() {
+    return Row(
+      children : <Widget> [
+        Expanded(
+            child: DropdownButton(
+              items: getDropdownOptions(),
+              value: _optionSelected,
+              onChanged: (optionSelected){
+                setState(() {
+                  _optionSelected = optionSelected;
+                });
+              } ,
+            ),
+        )
+      ]
+    );
+  }
+
+  List<DropdownMenuItem<String>> getDropdownOptions () {
+    List<DropdownMenuItem<String>> list = new List();
+    _poderes.forEach((poder) {
+      list.add(DropdownMenuItem(
+        child: Text(poder),
+        value: poder,
+      ));
+    });
+    return list;
+  }
+
+  Widget _showValues() {
+    return ListTile(
+      title: Text('El nombre es $_userName'),
+      subtitle: Text('El email es $_email'),
+      trailing: Text(_optionSelected),
+    );
   }
 }
